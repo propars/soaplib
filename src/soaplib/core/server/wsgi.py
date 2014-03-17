@@ -49,6 +49,18 @@ def _reconstruct_soap_request(http_env):
     length = http_env.get("CONTENT_LENGTH")
     http_payload = input.read(int(length))
 
+
+    # &ek
+    uuid=None
+    try:
+        if http_payload.find("uuid:")>-1:
+            uuid_ = http_payload[http_payload.index("uuid:")+5:]
+            uuid = uuid_.split("\r\nContent-Type")[0]       
+    except Exception, e:        
+        pass
+    # &ek-
+
+
     # fyi, here's what the parse_header function returns:
     # >>> import cgi; cgi.parse_header("text/xml; charset=utf-8")
     # ('text/xml', {'charset': 'utf-8'})
@@ -57,7 +69,8 @@ def _reconstruct_soap_request(http_env):
     if charset is None:
         charset = 'ascii'
 
-    return collapse_swa(content_type, http_payload), charset
+    # uuid eklendi &ek
+    return collapse_swa(content_type, http_payload, uuid), charset
 
 class Application(Base):
     transport = 'http://schemas.xmlsoap.org/soap/http'
@@ -130,6 +143,15 @@ class Application(Base):
         self.on_wsgi_call(req_env)
 
         in_string, in_string_charset = _reconstruct_soap_request(req_env)
+
+        ## &ek
+        in_string = in_string.replace("ns3:documentRequest","ns0:sendDocument")
+        in_string = in_string.replace('xmlns:ns3="http://gib.gov.tr/vedop3/eFatura"','xmlns:ns3="http://gib.gov.tr/vedop3/eFatura" xmlns:ns0="soap.views"'  )
+        in_string = in_string.replace("fileName","ns0:fileName")
+        in_string = in_string.replace("binaryData","ns0:binaryData")
+        in_string = in_string.replace("hash","ns0:hash")
+        in_string = in_string.replace("ns0:ns0","ns0") 
+        # &ek-
 
         in_object = self.get_in_object(ctx, in_string, in_string_charset)
 

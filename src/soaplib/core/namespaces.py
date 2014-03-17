@@ -31,6 +31,13 @@ ns_soap12_enc = 'http://www.w3.org/2003/05/soap-encoding/'
 ns_wsa = 'http://schemas.xmlsoap.org/ws/2003/03/addressing'
 ns_xop = 'http://www.w3.org/2004/08/xop/include'
 
+# &ek
+ns_soap_enc = 'http://www.w3.org/2003/05/soap-encoding'
+ns_soap_env = 'http://www.w3.org/2003/05/soap-envelope'
+# &ek -
+
+ns3 = "http://gib.gov.tr/vedop3/eFatura"
+
 const_nsmap = {
     'xml': ns_xml,
     'xs': ns_xsd,
@@ -44,6 +51,7 @@ const_nsmap = {
     's12enc': ns_soap12_enc,
     'wsa': ns_wsa,
     'xop': ns_xop,
+    'ns3' : ns3,
 }
 
 const_prefmap = dict([(b,a) for a,b in const_nsmap.items()])

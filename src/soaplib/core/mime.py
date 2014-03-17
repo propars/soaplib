@@ -89,7 +89,8 @@ def join_attachment(href_id, envelope, payload, prefix=True):
 
     return (etree.tostring(soaptree), numreplaces)
 
-def collapse_swa(content_type, envelope):
+# &ek uuid eklendi
+def collapse_swa(content_type, envelope, uuid):
     '''
     Translates an SwA multipart/related message into an
     application/soap+xml message.
@@ -123,6 +124,17 @@ def collapse_swa(content_type, envelope):
         "",
         envelope
     ]
+
+    # &ek
+    if uuid:
+        msg_string = [
+        "MIME-Version: 1.0",
+        'Content-Type: %s; charset=%s; boundary="uuid:%s"' % (mime_type, charset,uuid),
+        "",
+        envelope
+    ]
+    # &ek-
+
 
     msg = message_from_string('\r\n'.join(msg_string)) # our message
 
